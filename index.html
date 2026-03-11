@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三人考研打卡 - 南大/矿大冲刺</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .countdown {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .members {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .member-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .member-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .member-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .xixian { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .liushen { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .huangsir { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        
+        .member-info h3 {
+            font-size: 1.3rem;
+            color: #333;
+        }
+        
+        .member-info p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        .check-in {
+            margin-bottom: 20px;
+        }
+        
+        .check-in h4 {
+            color: #555;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        
+        .check-in-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .check-in-form input[type="number"] {
+            width: 80px;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .check-in-form input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .check-in-form button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        
+        .check-in-form button:hover {
+            background: #5a67d8;
+        }
+        
+        .progress-section {
+            margin-bottom: 20px;
+        }
+        
+        .progress-section h4 {
+            color: #555;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        
+        .progress-item {
+            margin-bottom: 10px;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.5s;
+        }
+        
+        .thoughts {
+            margin-top: 20px;
+        }
+        
+        .thoughts h4 {
+            color: #555;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        
+        .thoughts textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+        
+        .thoughts button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .thoughts-list {
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .thought-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .thought-meta {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        
+        .thought-content {
+            color: #444;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        
+        .shared-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .shared-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .quote-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        
+        footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 30px;
+            padding: 20px;
+        }
+        
+        .edit-progress {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .edit-progress input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+        }
+        
+        .edit-progress button {
+            padding: 8px 16px;
+            background: #ed8936;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 三人考研打卡</h1>
+            <p class="countdown">距离考研还有 <span id="daysLeft">--</span> 天</p>
+        </header>
+        
+        <div class="members">
+            <!-- 希贤 -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="avatar xixian">希</div>
+                    <div class="member-info">
+                        <h3>希贤</h3>
+                        <p>🎯 南京大学软件学院 | 408统考</p>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value" id="xixian-days">0</div>
+                        <div class="stat-label">打卡天数</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="xixian-hours">0</div>
+                        <div class="stat-label">总时长(h)</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="xixian-today">0</div>
+                        <div class="stat-label">今日(h)</div>
+                    </div>
+                </div>
+                
+                <div class="check-in">
+                    <h4>📍 今日打卡</h4>
+                    <div class="check-in-form">
+                        <input type="number" id="xixian-time" placeholder="小时" min="0" max="24" step="0.5">
+                        <input type="text" id="xixian-content" placeholder="今天学了什么？">
+                        <button onclick="checkIn('xixian')">打卡</button>
+                    </div>
+                </div>
+                
+                <div class="progress-section">
+                    <h4>📚 408 进度</h4>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>数据结构</span>
+                            <span id="xixian-p1-text">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="xixian-p1-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>计算机组成原理</span>
+                            <span id="xixian-p2-text">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="xixian-p2-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>操作系统</span>
+                            <span id="xixian-p3-text">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="xixian-p3-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>计算机网络</span>
+                            <span id="xixian-p4-text">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="xixian-p4-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="edit-progress">
+                        <input type="number" id="xixian-p1-input" placeholder="数据结构%" min="0" max="100">
+                        <input type="number" id="xixian-p2-input" placeholder="计组%" min="0" max="100">
+                        <input type="number" id="xixian-p3-input" placeholder="OS%" min="0" max="100">
+                        <input type="number" id="xixian-p4-input" placeholder="网络%" min="0" max="100">
+                        <button onclick="updateProgress('xixian')">更新</button>
+                    </div>
+                </div>
+                
+                <div class="thoughts">
+                    <h4>💭 学习感悟</h4>
+                    <textarea id="xixian-thought" placeholder="写下今天的学习心得..."></textarea>
+                    <button onclick="addThought('xixian')">发布感悟</button>
+                    <div class="thoughts-list" id="xixian-thoughts"></div>
+                </div>
+            </div>
+            
+            <!-- 刘神 -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="avatar liushen">刘</div>
+                    <div class="member-info">
+                        <h3>刘神</h3>
+                        <p>🎯 中国矿业大学 | 安全工程</p>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value" id="liushen-days">0</div>
+                        <div class="stat-label">打卡天数</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="liushen-hours">0</div>
+                        <div class="stat-label">总时长(h)</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="liushen-today">0</div>
+                        <div class="stat-label">今日(h)</div>
+                    </div>
+                </div>
+                
+                <div class="check-in">
+                    <h4>📍 今日打卡</h4>
+                    <div class="check-in-form">
+                        <input type="number" id="liushen-time" placeholder="小时" min="0" max="24" step="0.5">
+                        <input type="text" id="liushen-content" placeholder="今天学了什么？">
+                        <button onclick="checkIn('liushen')">打卡</button>
+                    </div>
+                </div>
+                
+                <div class="progress-section">
+                    <h4>📚 专业课进度</h4>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>安全系统工程</span>
+                            <span id="liushen-p1-text">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="liushen-p1-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>防火防爆</span>
+                            <span id="liushen-p2-text">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="liushen-p2-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>职业卫生</span>
+                            <span id="liushen-p3-text">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="liushen-p3-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="edit-progress">
+                        <input type="number" id="liushen-p1-input" placeholder="安全系统%" min="0" max="100">
+                        <input type="number" id="liushen-p2-input" placeholder="防火防爆%" min="0" max="100">
+                        <input type="number" id="liushen-p3-input" placeholder="职业卫生%" min="0" max="100">
+                        <button onclick="updateProgress('liushen')">更新</button>
+                    </div>
+                </div>
+                
+                <div class="thoughts">
+                    <h4>💭 学习感悟</h4>
+                    <textarea id="liushen-thought" placeholder="写下今天的学习心得..."></textarea>
+                    <button onclick="addThought('liushen')">发布感悟</button>
+                    <div class="thoughts-list" id="liushen-thoughts"></div>
+                </div>
+            </div>
+            
+            <!-- 黄sir -->
+            <div class="member-card">
+                <div class="member-header">
+                    <div class="avatar huangsir">黄</div>
+                    <div class="member-info">
+                        <h3>黄sir</h3>
+                        <p>🎯 南京大学 | 电气工程</p>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value" id="huangsir-days">0</div>
+                        <div class="stat-label">打卡天数</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="huangsir-hours">0</div>
+                        <div class="stat-label">总时长(h)</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="huangsir-today">0</div>
+                        <div class="stat-label">今日(h)</div>
+                    </div>
+                </div>
+                
+                <div class="check-in">
+                    <h4>📍 今日打卡</h4>
+                    <div class="check-in-form">
+                        <input type="number" id="huangsir-time" placeholder="小时" min="0" max="24" step="0.5">
+                        <input type="text" id="huangsir-content" placeholder="今天学了什么？">
+                        <button onclick="checkIn('huangsir')">打卡</button>
+                    </div>
+                </div>
+                
+                <div class="progress-section">
+                    <h4>📚 专业课进度</h4>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>电路原理</span>
+                            <span id="huangsir-p1-text">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="huangsir-p1-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>电机学</span>
+                            <span id="huangsir-p2-text">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="huangsir-p2-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>电力电子</span>
+                            <span id="huangsir-p3-text">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="huangsir-p3-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="edit-progress">
+                        <input type="number" id="huangsir-p1-input" placeholder="电路%" min="0" max="100">
+                        <input type="number" id="huangsir-p2-input" placeholder="电机%" min="0" max="100">
+                        <input type="number" id="huangsir-p3-input" placeholder="电力电子%" min="0" max="100">
+                        <button onclick="updateProgress('huangsir')">更新</button>
+                    </div>
+                </div>
+                
+                <div class="thoughts">
+                    <h4>💭 学习感悟</h4>
+                    <textarea id="huangsir-thought" placeholder="写下今天的学习心得..."></textarea>
+                    <button onclick="addThought('huangsir')">发布感悟</button>
+                    <div class="thoughts-list" id="huangsir-thoughts"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="shared-section">
+            <h2>🌟 每日一句</h2>
+            <div class="quote-box" id="dailyQuote">
+                "星光不问赶路人，时光不负有心人。"
+            </div>
+        </div>
+        
+        <footer>
+            <p>三人行，必有我师焉 💪</p>
+            <p>希贤 × 刘神 × 黄sir | 2026考研加油</p>
+        </footer>
+    </div>
+    
+    <script>
+        // 考研日期（2026年12月最后一个周末，假设为12月26日）
+        const examDate = new Date('2026-12-26');
+        
+        // 每日一句
+        const quotes = [
+            "星光不问赶路人，时光不负有心人。",
+            "你背不下来的书，总有人能背下来。",
+            "考研就像在黑屋子里洗衣服，你不知道洗干净没有。",
+            "坚持的意义：以后的日子里，放眼望去，全部都是自己喜欢的人和事。",
+            "那些看似不起波澜的日复一日，会突然在某一天让人看到坚持的意义。",
+            "愿你以渺小启程，以伟大结束。",
+            "没有醒不来的早晨，没有熬不过的迷茫。"
+        ];
+        
+        // 初始化
+        function init() {
+            updateCountdown();
+            loadData();
+            updateDailyQuote();
+            setInterval(updateCountdown, 60000); // 每分钟更新倒计时
+        }
+        
+        // 更新倒计时
+        function updateCountdown() {
+            const now = new Date();
+            const diff = examDate - now;
+            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+            document.getElementById('daysLeft').textContent = days > 0 ? days : 0;
+        }
+        
+        // 更新每日一句
+        function updateDailyQuote() {
+            const dayIndex = new Date().getDate() % quotes.length;
+            document.getElementById('dailyQuote').textContent = quotes[dayIndex];
+        }
+        
+        // 打卡
+        function checkIn(member) {
+            const timeInput = document.getElementById(`${member}-time`);
+            const contentInput = document.getElementById(`${member}-content`);
+            const hours = parseFloat(timeInput.value) || 0;
+            const content = contentInput.value.trim();
+            
+            if (hours <= 0) {
+                alert('请输入学习时长！');
+                return;
+            }
+            
+            const data = loadMemberData(member);
+            const today = new Date().toDateString();
+            
+            // 检查今天是否已打卡
+            if (data.lastCheckIn === today) {
+                data.todayHours = hours; // 更新今日时长
+            } else {
+                data.todayHours = hours;
+                data.totalDays++;
+            }
+            
+            data.totalHours += hours;
+            data.lastCheckIn = today;
+            
+            if (content) {
+                data.checkIns.unshift({ date: new Date().toLocaleString(), hours, content });
+            }
+            
+            saveMemberData(member, data);
+            updateUI(member);
+            
+            timeInput.value = '';
+            contentInput.value = '';
+            alert('打卡成功！💪');
+        }
+        
+        // 更新进度
+        function updateProgress(member) {
+            const data = loadMemberData(member);
+            
+            if (member === 'xixian') {
+                data.progress = {
+                    p1: parseInt(document.getElementById(`${member}-p1-input`).value) || 0,
+                    p2: parseInt(document.getElementById(`${member}-p2-input`).value) || 0,
+                    p3: parseInt(document.getElementById(`${member}-p3-input`).value) || 0,
+                    p4: parseInt(document.getElementById(`${member}-p4-input`).value) || 0
+                };
+            } else {
+                data.progress = {
+                    p1: parseInt(document.getElementById(`${member}-p1-input`).value) || 0,
+                    p2: parseInt(document.getElementById(`${member}-p2-input`).value) || 0,
+                    p3: parseInt(document.getElementById(`${member}-p3-input`).value) || 0
+                };
+            }
+            
+            saveMemberData(member, data);
+            updateUI(member);
+            alert('进度已更新！');
+        }
+        
+        // 添加感悟
+        function addThought(member) {
+            const textarea = document.getElementById(`${member}-thought`);
+            const content = textarea.value.trim();
+            
+            if (!content) {
+                alert('请输入感悟内容！');
+                return;
+            }
+            
+            const data = loadMemberData(member);
+            data.thoughts.unshift({
+                date: new Date().toLocaleString(),
+                content
+            });
+            
+            saveMemberData(member, data);
+            updateUI(member);
+            textarea.value = '';
+        }
+        
+        // 加载成员数据
+        function loadMemberData(member) {
+            const key = `kaoyan_${member}`;
+            const defaultData = {
+                totalDays: 0,
+                totalHours: 0,
+                todayHours: 0,
+                lastCheckIn: null,
+                checkIns: [],
+                thoughts: [],
+                progress: member === 'xixian' ? { p1: 0, p2: 0, p3: 0, p4: 0 } : { p1: 0, p2: 0, p3: 0 }
+            };
+            
+            const saved = localStorage.getItem(key);
+            return saved ? JSON.parse(saved) : defaultData;
+        }
+        
+        // 保存成员数据
+        function saveMemberData(member, data) {
+            localStorage.setItem(`kaoyan_${member}`, JSON.stringify(data));
+        }
+        
+        // 更新UI
+        function updateUI(member) {
+            const data = loadMemberData(member);
+            
+            // 检查是否是新的一天
+            const today = new Date().toDateString();
+            if (data.lastCheckIn !== today) {
+                data.todayHours = 0;
+            }
+            
+            document.getElementById(`${member}-days`).textContent = data.totalDays;
+            document.getElementById(`${member}-hours`).textContent = data.totalHours.toFixed(1);
+            document.getElementById(`${member}-today`).textContent = data.todayHours.toFixed(1);
+            
+            // 更新进度条
+            if (data.progress) {
+                for (let i = 1; i <= (member === 'xixian' ? 4 : 3); i++) {
+                    const p = data.progress[`p${i}`] || 0;
+                    document.getElementById(`${member}-p${i}-text`).textContent = p + '%';
+                    document.getElementById(`${member}-p${i}-bar`).style.width = p + '%';
+                }
+            }
+            
+            // 更新感悟列表
+            const thoughtsList = document.getElementById(`${member}-thoughts`);
+            thoughtsList.innerHTML = data.thoughts.map(t => `
+                <div class="thought-item">
+                    <div class="thought-meta">${t.date}</div>
+                    <div class="thought-content">${escapeHtml(t.content)}</div>
+                </div>
+            `).join('');
+        }
+        
+        // 加载所有数据
+        function loadData() {
+            ['xixian', 'liushen', 'huangsir'].forEach(updateUI);
+        }
+        
+        // HTML转义
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // 启动
+        init();
+    </script>
+</body>
+</html>
