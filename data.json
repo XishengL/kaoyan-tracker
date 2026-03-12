@@ -1,0 +1,54 @@
+{
+  "xixian": {
+    "name": "希贤",
+    "target": "南京大学软件学院 | 408统考",
+    "totalDays": 1,
+    "totalHours": 2,
+    "todayHours": 2,
+    "lastCheckIn": "Thu Mar 12 2026",
+    "checkIns": [
+      {
+        "date": "2026/3/12 11:02:00",
+        "hours": 2,
+        "content": "17年英语test3，介质访问控制"
+      }
+    ],
+    "thoughts": [],
+    "progress": {
+      "p1": 100,
+      "p2": 100,
+      "p3": 100,
+      "p4": 30
+    }
+  },
+  "liushen": {
+    "name": "刘神",
+    "target": "中国矿业大学 | 安全工程",
+    "totalDays": 0,
+    "totalHours": 0,
+    "todayHours": 0,
+    "lastCheckIn": null,
+    "checkIns": [],
+    "thoughts": [],
+    "progress": {
+      "p1": 0,
+      "p2": 0,
+      "p3": 0
+    }
+  },
+  "huangsir": {
+    "name": "黄sir",
+    "target": "南京大学 | 电气工程",
+    "totalDays": 0,
+    "totalHours": 0,
+    "todayHours": 0,
+    "lastCheckIn": null,
+    "checkIns": [],
+    "thoughts": [],
+    "progress": {
+      "p1": 0,
+      "p2": 0,
+      "p3": 0
+    }
+  }
+}
