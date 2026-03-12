@@ -587,6 +587,9 @@
     </div>
     
     <script>
+        // API 基础地址
+        const API_BASE = window.location.origin;
+        
         // 考研日期（2026年12月最后一个周末，假设为12月26日）
         const examDate = new Date('2026-12-26');
         
@@ -601,12 +604,16 @@
             "没有醒不来的早晨，没有熬不过的迷茫。"
         ];
         
+        // 缓存数据
+        let membersData = {};
+        
         // 初始化
-        function init() {
+        async function init() {
             updateCountdown();
-            loadData();
             updateDailyQuote();
+            await loadData();
             setInterval(updateCountdown, 60000); // 每分钟更新倒计时
+            setInterval(loadData, 30000); // 每30秒自动刷新数据
         }
         
         // 更新倒计时
@@ -623,8 +630,19 @@
             document.getElementById('dailyQuote').textContent = quotes[dayIndex];
         }
         
+        // 从服务器加载数据
+        async function loadData() {
+            try {
+                const response = await fetch(`${API_BASE}/api/data`);
+                membersData = await response.json();
+                ['xixian', 'liushen', 'huangsir'].forEach(updateUI);
+            } catch (err) {
+                console.error('加载数据失败:', err);
+            }
+        }
+        
         // 打卡
-        function checkIn(member) {
+        async function checkIn(member) {
             const timeInput = document.getElementById(`${member}-time`);
             const contentInput = document.getElementById(`${member}-content`);
             const hours = parseFloat(timeInput.value) || 0;
@@ -635,58 +653,73 @@
                 return;
             }
             
-            const data = loadMemberData(member);
-            const today = new Date().toDateString();
-            
-            // 检查今天是否已打卡
-            if (data.lastCheckIn === today) {
-                data.todayHours = hours; // 更新今日时长
-            } else {
-                data.todayHours = hours;
-                data.totalDays++;
+            try {
+                const response = await fetch(`${API_BASE}/api/checkin/${member}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ hours, content })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    membersData[member] = result.member;
+                    updateUI(member);
+                    timeInput.value = '';
+                    contentInput.value = '';
+                    alert('打卡成功！💪');
+                } else {
+                    alert(result.error || '打卡失败');
+                }
+            } catch (err) {
+                console.error('打卡失败:', err);
+                alert('网络错误，请重试');
             }
-            
-            data.totalHours += hours;
-            data.lastCheckIn = today;
-            
-            if (content) {
-                data.checkIns.unshift({ date: new Date().toLocaleString(), hours, content });
-            }
-            
-            saveMemberData(member, data);
-            updateUI(member);
-            
-            timeInput.value = '';
-            contentInput.value = '';
-            alert('打卡成功！💪');
         }
         
         // 更新进度
-        function updateProgress(member) {
-            const data = loadMemberData(member);
+        async function updateProgress(member) {
+            let progress = {};
             
             if (member === 'xixian') {
-                data.progress = {
+                progress = {
                     p1: parseInt(document.getElementById(`${member}-p1-input`).value) || 0,
                     p2: parseInt(document.getElementById(`${member}-p2-input`).value) || 0,
                     p3: parseInt(document.getElementById(`${member}-p3-input`).value) || 0,
                     p4: parseInt(document.getElementById(`${member}-p4-input`).value) || 0
                 };
             } else {
-                data.progress = {
+                progress = {
                     p1: parseInt(document.getElementById(`${member}-p1-input`).value) || 0,
                     p2: parseInt(document.getElementById(`${member}-p2-input`).value) || 0,
                     p3: parseInt(document.getElementById(`${member}-p3-input`).value) || 0
                 };
             }
             
-            saveMemberData(member, data);
-            updateUI(member);
-            alert('进度已更新！');
+            try {
+                const response = await fetch(`${API_BASE}/api/progress/${member}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ progress })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    membersData[member] = result.member;
+                    updateUI(member);
+                    alert('进度已更新！');
+                } else {
+                    alert(result.error || '更新失败');
+                }
+            } catch (err) {
+                console.error('更新进度失败:', err);
+                alert('网络错误，请重试');
+            }
         }
         
         // 添加感悟
-        function addThought(member) {
+        async function addThought(member) {
             const textarea = document.getElementById(`${member}-thought`);
             const content = textarea.value.trim();
             
@@ -695,48 +728,32 @@
                 return;
             }
             
-            const data = loadMemberData(member);
-            data.thoughts.unshift({
-                date: new Date().toLocaleString(),
-                content
-            });
-            
-            saveMemberData(member, data);
-            updateUI(member);
-            textarea.value = '';
-        }
-        
-        // 加载成员数据
-        function loadMemberData(member) {
-            const key = `kaoyan_${member}`;
-            const defaultData = {
-                totalDays: 0,
-                totalHours: 0,
-                todayHours: 0,
-                lastCheckIn: null,
-                checkIns: [],
-                thoughts: [],
-                progress: member === 'xixian' ? { p1: 0, p2: 0, p3: 0, p4: 0 } : { p1: 0, p2: 0, p3: 0 }
-            };
-            
-            const saved = localStorage.getItem(key);
-            return saved ? JSON.parse(saved) : defaultData;
-        }
-        
-        // 保存成员数据
-        function saveMemberData(member, data) {
-            localStorage.setItem(`kaoyan_${member}`, JSON.stringify(data));
+            try {
+                const response = await fetch(`${API_BASE}/api/thought/${member}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    membersData[member] = result.member;
+                    updateUI(member);
+                    textarea.value = '';
+                } else {
+                    alert(result.error || '发布失败');
+                }
+            } catch (err) {
+                console.error('发布感悟失败:', err);
+                alert('网络错误，请重试');
+            }
         }
         
         // 更新UI
         function updateUI(member) {
-            const data = loadMemberData(member);
-            
-            // 检查是否是新的一天
-            const today = new Date().toDateString();
-            if (data.lastCheckIn !== today) {
-                data.todayHours = 0;
-            }
+            const data = membersData[member];
+            if (!data) return;
             
             document.getElementById(`${member}-days`).textContent = data.totalDays;
             document.getElementById(`${member}-hours`).textContent = data.totalHours.toFixed(1);
@@ -744,26 +761,26 @@
             
             // 更新进度条
             if (data.progress) {
-                for (let i = 1; i <= (member === 'xixian' ? 4 : 3); i++) {
+                const maxProgress = member === 'xixian' ? 4 : 3;
+                for (let i = 1; i <= maxProgress; i++) {
                     const p = data.progress[`p${i}`] || 0;
-                    document.getElementById(`${member}-p${i}-text`).textContent = p + '%';
-                    document.getElementById(`${member}-p${i}-bar`).style.width = p + '%';
+                    const textEl = document.getElementById(`${member}-p${i}-text`);
+                    const barEl = document.getElementById(`${member}-p${i}-bar`);
+                    if (textEl) textEl.textContent = p + '%';
+                    if (barEl) barEl.style.width = p + '%';
                 }
             }
             
             // 更新感悟列表
             const thoughtsList = document.getElementById(`${member}-thoughts`);
-            thoughtsList.innerHTML = data.thoughts.map(t => `
-                <div class="thought-item">
-                    <div class="thought-meta">${t.date}</div>
-                    <div class="thought-content">${escapeHtml(t.content)}</div>
-                </div>
-            `).join('');
-        }
-        
-        // 加载所有数据
-        function loadData() {
-            ['xixian', 'liushen', 'huangsir'].forEach(updateUI);
+            if (thoughtsList && data.thoughts) {
+                thoughtsList.innerHTML = data.thoughts.map(t => `
+                    <div class="thought-item">
+                        <div class="thought-meta">${t.date}</div>
+                        <div class="thought-content">${escapeHtml(t.content)}</div>
+                    </div>
+                `).join('');
+            }
         }
         
         // HTML转义
