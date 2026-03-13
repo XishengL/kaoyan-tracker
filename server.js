@@ -4,12 +4,30 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'data.json');
+
+console.log('🚀 正在启动服务器...');
+console.log('📁 数据文件:', DATA_FILE);
+console.log('🔧 环境 PORT:', process.env.PORT);
+
+// 设置时区为北京时间
+process.env.TZ = 'Asia/Shanghai';
 
 // 中间件
 app.use(cors());
 app.use(express.json());
+
+// 健康检查必须在静态文件之前
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', time: new Date().toISOString() });
+});
+
+// Railway 默认健康检查可能是根路径
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 app.use(express.static(__dirname));
 
 // 读取数据
@@ -34,9 +52,23 @@ function writeData(data) {
   }
 }
 
+// 获取北京时间日期字符串
+function getBeijingDateString() {
+  const now = new Date();
+  const beijingTime = new Date(now.getTime() + (8 * 60 * 60 * 1000));
+  return beijingTime.toISOString().split('T')[0];
+}
+
+// 获取北京时间日期时间字符串
+function getBeijingDateTimeString() {
+  const now = new Date();
+  const beijingTime = new Date(now.getTime() + (8 * 60 * 60 * 1000));
+  return beijingTime.toISOString().replace('T', ' ').substring(0, 19);
+}
+
 // 检查是否是新的一天，重置今日时长
 function checkNewDay(data) {
-  const today = new Date().toDateString();
+  const today = getBeijingDateString();
   for (const member in data) {
     if (data[member].lastCheckIn !== today) {
       data[member].todayHours = 0;
@@ -77,7 +109,7 @@ app.post('/api/checkin/:id', (req, res) => {
     return res.status(404).json({ error: '成员不存在' });
   }
 
-  const today = new Date().toDateString();
+  const today = getBeijingDateString();
   
   // 检查今天是否已打卡
   if (member.lastCheckIn === today) {
@@ -95,7 +127,7 @@ app.post('/api/checkin/:id', (req, res) => {
   
   if (content) {
     member.checkIns.unshift({
-      date: new Date().toLocaleString('zh-CN'),
+      date: getBeijingDateTimeString(),
       hours,
       content
     });
@@ -142,7 +174,7 @@ app.post('/api/thought/:id', (req, res) => {
   }
 
   member.thoughts.unshift({
-    date: new Date().toLocaleString('zh-CN'),
+    date: getBeijingDateTimeString(),
     content: content.trim()
   });
 
@@ -153,7 +185,36 @@ app.post('/api/thought/:id', (req, res) => {
   }
 });
 
-// 重置今日时长（每天0点调用）
+// 更新成员信息（目标院校、科目等）
+app.post('/api/member/:id/update', (req, res) => {
+  const { target, subjects } = req.body;
+  const data = readData();
+  const member = data[req.params.id];
+  
+  if (!member) {
+    return res.status(404).json({ error: '成员不存在' });
+  }
+
+  if (target !== undefined) member.target = target;
+  if (subjects !== undefined) {
+    member.subjects = subjects;
+    // 同步更新 progress 的键
+    const newProgress = {};
+    subjects.forEach((sub, idx) => {
+      const key = `p${idx + 1}`;
+      newProgress[key] = member.progress?.[key] || 0;
+    });
+    member.progress = newProgress;
+  }
+
+  if (writeData(data)) {
+    res.json({ success: true, member });
+  } else {
+    res.status(500).json({ error: '保存失败' });
+  }
+});
+
+// 重置今日时长（每天 0 点调用）
 app.post('/api/reset-today', (req, res) => {
   const data = readData();
   for (const member in data) {
@@ -166,7 +227,6 @@ app.post('/api/reset-today', (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 考研打卡服务器运行在 http://localhost:${PORT}`);
-  console.log(`📱 用手机访问请替换 localhost 为你的电脑IP`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ 服务器已启动，监听 http://0.0.0.0:${PORT}`);
 });
