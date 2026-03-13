@@ -1,16 +1,17 @@
 {
   "xixian": {
     "name": "希贤",
-    "target": "南京大学软件学院 | 408统考",
+    "target": "南京大学软件学院",
+    "subjects": ["数据结构", "计算机组成原理", "操作系统", "计算机网络"],
     "totalDays": 1,
     "totalHours": 2,
     "todayHours": 2,
-    "lastCheckIn": "Thu Mar 12 2026",
+    "lastCheckIn": "2026-03-12",
     "checkIns": [
       {
-        "date": "2026/3/12 11:02:00",
+        "date": "2026-03-12 11:02:00",
         "hours": 2,
-        "content": "17年英语test3，介质访问控制"
+        "content": "17 年英语 test3，介质访问控制"
       }
     ],
     "thoughts": [],
@@ -23,7 +24,8 @@
   },
   "liushen": {
     "name": "刘神",
-    "target": "中国矿业大学 | 安全工程",
+    "target": "中国矿业大学",
+    "subjects": ["安全系统工程", "防火防爆", "职业卫生"],
     "totalDays": 0,
     "totalHours": 0,
     "todayHours": 0,
@@ -37,8 +39,9 @@
     }
   },
   "huangsir": {
-    "name": "黄sir",
-    "target": "南京大学 | 电气工程",
+    "name": "黄 sir",
+    "target": "南京大学",
+    "subjects": ["电路原理", "电机学", "电力电子"],
     "totalDays": 0,
     "totalHours": 0,
     "todayHours": 0,
