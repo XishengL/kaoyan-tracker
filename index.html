@@ -86,114 +86,8 @@
             <p class="countdown">距离考研还有 <span id="daysLeft">--</span> 天</p>
         </header>
         
-        <div class="members">
-            <!-- 希贤 -->
-            <div class="member-card">
-                <div class="member-header">
-                    <div class="avatar xixian">希</div>
-                    <div class="member-info">
-                        <h3>希贤</h3>
-                        <p id="xixian-target">🎯 南京大学软件学院 | 408统考</p>
-                    </div>
-                    <button class="edit-info-btn" onclick="openEditModal('xixian')" title="编辑信息">✏️</button>
-                </div>
-                <div class="stats">
-                    <div class="stat"><div class="stat-value" id="xixian-days">0</div><div class="stat-label">打卡天数</div></div>
-                    <div class="stat"><div class="stat-value" id="xixian-hours">0</div><div class="stat-label">总时长(h)</div></div>
-                    <div class="stat"><div class="stat-value" id="xixian-today">0</div><div class="stat-label">今日(h)</div></div>
-                </div>
-                <div class="check-in">
-                    <h4>📍 今日打卡</h4>
-                    <div class="check-in-form">
-                        <input type="number" id="xixian-time" placeholder="小时" min="0" max="24" step="0.5">
-                        <input type="text" id="xixian-content" placeholder="今天学了什么？">
-                        <button onclick="checkIn('xixian')">打卡</button>
-                    </div>
-                </div>
-                <div class="progress-section">
-                    <h4>📚 专业课进度</h4>
-                    <div id="xixian-progress-list"></div>
-                    <div class="edit-progress" id="xixian-progress-inputs"></div>
-                </div>
-                <div class="thoughts">
-                    <h4>💭 学习感悟</h4>
-                    <textarea id="xixian-thought" placeholder="写下今天的学习心得..."></textarea>
-                    <button onclick="addThought('xixian')">发布感悟</button>
-                    <div class="thoughts-list" id="xixian-thoughts"></div>
-                </div>
-            </div>
-            
-            <!-- 刘神 -->
-            <div class="member-card">
-                <div class="member-header">
-                    <div class="avatar liushen">刘</div>
-                    <div class="member-info">
-                        <h3>刘神</h3>
-                        <p id="liushen-target">🎯 中国矿业大学 | 安全工程</p>
-                    </div>
-                    <button class="edit-info-btn" onclick="openEditModal('liushen')" title="编辑信息">✏️</button>
-                </div>
-                <div class="stats">
-                    <div class="stat"><div class="stat-value" id="liushen-days">0</div><div class="stat-label">打卡天数</div></div>
-                    <div class="stat"><div class="stat-value" id="liushen-hours">0</div><div class="stat-label">总时长(h)</div></div>
-                    <div class="stat"><div class="stat-value" id="liushen-today">0</div><div class="stat-label">今日(h)</div></div>
-                </div>
-                <div class="check-in">
-                    <h4>📍 今日打卡</h4>
-                    <div class="check-in-form">
-                        <input type="number" id="liushen-time" placeholder="小时" min="0" max="24" step="0.5">
-                        <input type="text" id="liushen-content" placeholder="今天学了什么？">
-                        <button onclick="checkIn('liushen')">打卡</button>
-                    </div>
-                </div>
-                <div class="progress-section">
-                    <h4>📚 专业课进度</h4>
-                    <div id="liushen-progress-list"></div>
-                    <div class="edit-progress" id="liushen-progress-inputs"></div>
-                </div>
-                <div class="thoughts">
-                    <h4>💭 学习感悟</h4>
-                    <textarea id="liushen-thought" placeholder="写下今天的学习心得..."></textarea>
-                    <button onclick="addThought('liushen')">发布感悟</button>
-                    <div class="thoughts-list" id="liushen-thoughts"></div>
-                </div>
-            </div>
-            
-            <!-- 黄sir -->
-            <div class="member-card">
-                <div class="member-header">
-                    <div class="avatar huangsir">黄</div>
-                    <div class="member-info">
-                        <h3>黄sir</h3>
-                        <p id="huangsir-target">🎯 南京大学 | 电气工程</p>
-                    </div>
-                    <button class="edit-info-btn" onclick="openEditModal('huangsir')" title="编辑信息">✏️</button>
-                </div>
-                <div class="stats">
-                    <div class="stat"><div class="stat-value" id="huangsir-days">0</div><div class="stat-label">打卡天数</div></div>
-                    <div class="stat"><div class="stat-value" id="huangsir-hours">0</div><div class="stat-label">总时长(h)</div></div>
-                    <div class="stat"><div class="stat-value" id="huangsir-today">0</div><div class="stat-label">今日(h)</div></div>
-                </div>
-                <div class="check-in">
-                    <h4>📍 今日打卡</h4>
-                    <div class="check-in-form">
-                        <input type="number" id="huangsir-time" placeholder="小时" min="0" max="24" step="0.5">
-                        <input type="text" id="huangsir-content" placeholder="今天学了什么？">
-                        <button onclick="checkIn('huangsir')">打卡</button>
-                    </div>
-                </div>
-                <div class="progress-section">
-                    <h4>📚 专业课进度</h4>
-                    <div id="huangsir-progress-list"></div>
-                    <div class="edit-progress" id="huangsir-progress-inputs"></div>
-                </div>
-                <div class="thoughts">
-                    <h4>💭 学习感悟</h4>
-                    <textarea id="huangsir-thought" placeholder="写下今天的学习心得..."></textarea>
-                    <button onclick="addThought('huangsir')">发布感悟</button>
-                    <div class="thoughts-list" id="huangsir-thoughts"></div>
-                </div>
-            </div>
+        <div class="members" id="members-container">
+            <!-- 动态生成 -->
         </div>
         
         <div class="shared-section">
@@ -234,12 +128,7 @@
     <script>
         const examDate = new Date('2026-12-26');
         let editingMember = null;
-        
-        const defaultConfigs = {
-            xixian: { school: '南京大学', major: '软件学院', subjects: ['数据结构', '计算机组成原理', '操作系统', '计算机网络'] },
-            liushen: { school: '中国矿业大学', major: '安全工程', subjects: ['安全系统工程', '防火防爆', '职业卫生'] },
-            huangsir: { school: '南京大学', major: '电气工程', subjects: ['电路原理', '电机学', '电力电子'] }
-        };
+        let membersData = {};
         
         const quotes = [
             "星光不问赶路人，时光不负有心人。",
@@ -251,11 +140,11 @@
             "没有醒不来的早晨，没有熬不过的迷茫。"
         ];
         
-        function init() {
+        async function init() {
             updateCountdown();
-            loadData();
             updateDailyQuote();
             setInterval(updateCountdown, 60000);
+            await loadData();
         }
         
         function updateCountdown() {
@@ -270,24 +159,85 @@
             document.getElementById('dailyQuote').textContent = quotes[dayIndex];
         }
         
-        function getMemberConfig(member) {
-            const key = `kaoyan_config_${member}`;
-            const saved = localStorage.getItem(key);
-            return saved ? JSON.parse(saved) : { ...defaultConfigs[member] };
+        async function loadData() {
+            try {
+                const res = await fetch('/api/data');
+                membersData = await res.json();
+                renderMembers();
+            } catch (err) {
+                console.error('加载数据失败:', err);
+                alert('加载数据失败，请刷新页面重试');
+            }
         }
         
-        function saveMemberConfig(member, config) {
-            localStorage.setItem(`kaoyan_config_${member}`, JSON.stringify(config));
+        function renderMembers() {
+            const container = document.getElementById('members-container');
+            container.innerHTML = Object.keys(membersData).map(key => {
+                const m = membersData[key];
+                const avatarClass = key;
+                const avatarText = m.name[0];
+                
+                let progressHTML = '';
+                let inputsHTML = '';
+                m.subjects.forEach((subject, idx) => {
+                    const pKey = `p${idx + 1}`;
+                    const val = m.progress[pKey] || 0;
+                    progressHTML += `<div class="progress-item"><div class="progress-header"><span>${subject}</span><span id="${key}-${pKey}-text">${val}%</span></div><div class="progress-bar"><div class="progress-fill" id="${key}-${pKey}-bar" style="width: ${val}%"></div></div></div>`;
+                    inputsHTML += `<input type="number" id="${key}-${pKey}-input" placeholder="${subject}%" min="0" max="100">`;
+                });
+                
+                const thoughtsHTML = m.thoughts.map(t => `<div class="thought-item"><div class="thought-meta">${t.date}</div><div class="thought-content">${escapeHtml(t.content)}</div></div>`).join('');
+                
+                return `
+                    <div class="member-card">
+                        <div class="member-header">
+                            <div class="avatar ${avatarClass}">${avatarText}</div>
+                            <div class="member-info">
+                                <h3>${m.name}</h3>
+                                <p id="${key}-target">🎯 ${m.school} | ${m.major}</p>
+                            </div>
+                            <button class="edit-info-btn" onclick="openEditModal('${key}')" title="编辑信息">✏️</button>
+                        </div>
+                        <div class="stats">
+                            <div class="stat"><div class="stat-value" id="${key}-days">${m.totalDays}</div><div class="stat-label">打卡天数</div></div>
+                            <div class="stat"><div class="stat-value" id="${key}-hours">${m.totalHours.toFixed(1)}</div><div class="stat-label">总时长(h)</div></div>
+                            <div class="stat"><div class="stat-value" id="${key}-today">${m.todayHours.toFixed(1)}</div><div class="stat-label">今日(h)</div></div>
+                        </div>
+                        <div class="check-in">
+                            <h4>📍 今日打卡</h4>
+                            <div class="check-in-form">
+                                <input type="number" id="${key}-time" placeholder="小时" min="0" max="24" step="0.5">
+                                <input type="text" id="${key}-content" placeholder="今天学了什么？">
+                                <button onclick="checkIn('${key}')">打卡</button>
+                            </div>
+                        </div>
+                        <div class="progress-section">
+                            <h4>📚 专业课进度</h4>
+                            ${progressHTML}
+                            <div class="edit-progress">
+                                ${inputsHTML}
+                                <button onclick="updateProgress('${key}')">更新</button>
+                            </div>
+                        </div>
+                        <div class="thoughts">
+                            <h4>💭 学习感悟</h4>
+                            <textarea id="${key}-thought" placeholder="写下今天的学习心得..."></textarea>
+                            <button onclick="addThought('${key}')">发布感悟</button>
+                            <div class="thoughts-list">${thoughtsHTML}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
         
         function openEditModal(member) {
             editingMember = member;
-            const config = getMemberConfig(member);
-            document.getElementById('modal-school').value = config.school;
-            document.getElementById('modal-major').value = config.major;
-            const subjectsContainer = document.getElementById('modal-subjects');
-            subjectsContainer.innerHTML = '';
-            config.subjects.forEach((subject) => addSubjectInput(subject));
+            const m = membersData[member];
+            document.getElementById('modal-school').value = m.school;
+            document.getElementById('modal-major').value = m.major;
+            const container = document.getElementById('modal-subjects');
+            container.innerHTML = '';
+            m.subjects.forEach(s => addSubjectInput(s));
             document.getElementById('editModal').classList.add('active');
         }
         
@@ -304,7 +254,7 @@
             container.appendChild(row);
         }
         
-        function saveMemberInfo() {
+        async function saveMemberInfo() {
             if (!editingMember) return;
             const school = document.getElementById('modal-school').value.trim();
             const major = document.getElementById('modal-major').value.trim();
@@ -317,140 +267,99 @@
                 alert('请填写完整信息！');
                 return;
             }
-            const config = { school, major, subjects };
-            saveMemberConfig(editingMember, config);
-            const data = loadMemberData(editingMember);
-            const newProgress = {};
-            subjects.forEach((_, idx) => { newProgress[`p${idx + 1}`] = data.progress[`p${idx + 1}`] || 0; });
-            data.progress = newProgress;
-            saveMemberData(editingMember, data);
-            updateMemberInfoUI(editingMember);
-            updateUI(editingMember);
-            closeEditModal();
-            alert('信息已更新！');
+            try {
+                const res = await fetch(`/api/config/${editingMember}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ school, major, subjects })
+                });
+                if (res.ok) {
+                    await loadData();
+                    closeEditModal();
+                    alert('信息已更新！');
+                } else {
+                    alert('保存失败');
+                }
+            } catch (err) {
+                alert('网络错误');
+            }
         }
         
-        function updateMemberInfoUI(member) {
-            const config = getMemberConfig(member);
-            document.getElementById(`${member}-target`).textContent = `🎯 ${config.school} | ${config.major}`;
-        }
-        
-        function generateProgressHTML(member) {
-            const config = getMemberConfig(member);
-            const data = loadMemberData(member);
-            let html = '';
-            config.subjects.forEach((subject, index) => {
-                const pKey = `p${index + 1}`;
-                const value = data.progress[pKey] || 0;
-                html += `<div class="progress-item"><div class="progress-header"><span>${subject}</span><span id="${member}-${pKey}-text">${value}%</span></div><div class="progress-bar"><div class="progress-fill" id="${member}-${pKey}-bar" style="width: ${value}%"></div></div></div>`;
-            });
-            return html;
-        }
-        
-        function generateProgressInputsHTML(member) {
-            const config = getMemberConfig(member);
-            let html = '';
-            config.subjects.forEach((subject, index) => {
-                html += `<input type="number" id="${member}-p${index + 1}-input" placeholder="${subject}%" min="0" max="100">`;
-            });
-            html += `<button onclick="updateProgress('${member}')">更新</button>`;
-            return html;
-        }
-        
-        function checkIn(member) {
+        async function checkIn(member) {
             const timeInput = document.getElementById(`${member}-time`);
             const contentInput = document.getElementById(`${member}-content`);
             const hours = parseFloat(timeInput.value) || 0;
             const content = contentInput.value.trim();
             if (hours <= 0) { alert('请输入学习时长！'); return; }
-            const data = loadMemberData(member);
-            const today = new Date().toDateString();
-            if (data.lastCheckIn === today) { data.todayHours = hours; } else { data.todayHours = hours; data.totalDays++; }
-            data.totalHours += hours;
-            data.lastCheckIn = today;
-            if (content) { data.checkIns.unshift({ date: new Date().toLocaleString(), hours, content }); }
-            saveMemberData(member, data);
-            updateUI(member);
-            timeInput.value = '';
-            contentInput.value = '';
-            alert('打卡成功！💪');
+            try {
+                const res = await fetch(`/api/checkin/${member}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ hours, content })
+                });
+                if (res.ok) {
+                    await loadData();
+                    timeInput.value = '';
+                    contentInput.value = '';
+                    alert('打卡成功！💪');
+                } else {
+                    alert('打卡失败');
+                }
+            } catch (err) {
+                alert('网络错误');
+            }
         }
         
-        function updateProgress(member) {
-            const config = getMemberConfig(member);
-            const data = loadMemberData(member);
-            config.subjects.forEach((_, index) => {
-                const pKey = `p${index + 1}`;
+        async function updateProgress(member) {
+            const m = membersData[member];
+            const progress = {};
+            m.subjects.forEach((_, idx) => {
+                const pKey = `p${idx + 1}`;
                 const input = document.getElementById(`${member}-${pKey}-input`);
-                if (input) { data.progress[pKey] = parseInt(input.value) || 0; }
+                if (input) progress[pKey] = parseInt(input.value) || 0;
             });
-            saveMemberData(member, data);
-            updateUI(member);
-            alert('进度已更新！');
+            try {
+                const res = await fetch(`/api/progress/${member}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ progress })
+                });
+                if (res.ok) {
+                    await loadData();
+                    alert('进度已更新！');
+                } else {
+                    alert('更新失败');
+                }
+            } catch (err) {
+                alert('网络错误');
+            }
         }
         
-        function addThought(member) {
+        async function addThought(member) {
             const textarea = document.getElementById(`${member}-thought`);
             const content = textarea.value.trim();
             if (!content) { alert('请输入感悟内容！'); return; }
-            const data = loadMemberData(member);
-            data.thoughts.unshift({ date: new Date().toLocaleString(), content });
-            saveMemberData(member, data);
-            updateUI(member);
-            textarea.value = '';
-        }
-        
-        function loadMemberData(member) {
-            const key = `kaoyan_${member}`;
-            const config = getMemberConfig(member);
-            const defaultProgress = {};
-            config.subjects.forEach((_, idx) => { defaultProgress[`p${idx + 1}`] = 0; });
-            const defaultData = { totalDays: 0, totalHours: 0, todayHours: 0, lastCheckIn: null, checkIns: [], thoughts: [], progress: defaultProgress };
-            const saved = localStorage.getItem(key);
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                return { ...defaultData, ...parsed, progress: { ...defaultProgress, ...parsed.progress } };
+            try {
+                const res = await fetch(`/api/thought/${member}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content })
+                });
+                if (res.ok) {
+                    await loadData();
+                    textarea.value = '';
+                } else {
+                    alert('发布失败');
+                }
+            } catch (err) {
+                alert('网络错误');
             }
-            return defaultData;
-        }
-        
-        function saveMemberData(member, data) {
-            localStorage.setItem(`kaoyan_${member}`, JSON.stringify(data));
-        }
-        
-        function updateUI(member) {
-            const data = loadMemberData(member);
-            const today = new Date().toDateString();
-            if (data.lastCheckIn !== today) { data.todayHours = 0; }
-            document.getElementById(`${member}-days`).textContent = data.totalDays;
-            document.getElementById(`${member}-hours`).textContent = data.totalHours.toFixed(1);
-            document.getElementById(`${member}-today`).textContent = data.todayHours.toFixed(1);
-            const config = getMemberConfig(member);
-            config.subjects.forEach((_, index) => {
-                const pKey = `p${index + 1}`;
-                const value = data.progress[pKey] || 0;
-                const textEl = document.getElementById(`${member}-${pKey}-text`);
-                const barEl = document.getElementById(`${member}-${pKey}-bar`);
-                if (textEl) textEl.textContent = value + '%';
-                if (barEl) barEl.style.width = value + '%';
-            });
-            const thoughtsList = document.getElementById(`${member}-thoughts`);
-            thoughtsList.innerHTML = data.thoughts.map(t => `<div class="thought-item"><div class="thought-meta">${t.date}</div><div class="thought-content">${escapeHtml(t.content)}</div></div>`).join('');
-            document.getElementById(`${member}-progress-list`).innerHTML = generateProgressHTML(member);
-            document.getElementById(`${member}-progress-inputs`).innerHTML = generateProgressInputsHTML(member);
         }
         
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
-        }
-        
-        function loadData() {
-            ['xixian', 'liushen', 'huangsir'].forEach(member => {
-                updateMemberInfoUI(member);
-                updateUI(member);
-            });
         }
         
         init();
