@@ -201,7 +201,7 @@ app.post('/api/config/:member', (req, res) => {
     res.json({ success: true, data: data[member] });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`Timezone: ${process.env.TZ || 'system default'}`);
 });
