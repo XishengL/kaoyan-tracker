@@ -1,12 +1,14 @@
 {
   "name": "kaoyan-tracker",
   "version": "1.0.0",
-  "description": "考研打卡系统",
+  "description": "三人考研打卡系统",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
   }
 }
