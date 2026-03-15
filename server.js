@@ -80,6 +80,11 @@ function getTodayString() {
     return now.toISOString().split('T')[0];
 }
 
+// 根路径 - 返回 index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // 健康检查
 app.get('/health', (req, res) => {
     res.json({ status: 'ok', time: new Date().toISOString() });
