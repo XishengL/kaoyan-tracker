@@ -169,7 +169,7 @@ app.post('/api/reset-today', (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 考研打卡服务器运行在端口 ${PORT}`);
   console.log(`📱 本地访问: http://localhost:${PORT}`);
 });
