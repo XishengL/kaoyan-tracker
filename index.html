@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>考研打卡 - 三人行</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(180deg, #f5f5f7 0%, #e8e8ed 100%);
+            min-height: 100vh;
+            color: #1d1d1f;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Liquid Glass Effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 
+                0 4px 24px rgba(0, 0, 0, 0.04),
+                0 1px 2px rgba(0, 0, 0, 0.02),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px;
+            border-radius: 24px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #007aff, #5856d6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .subtitle {
+            color: #86868b;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        /* Countdown Card */
+        .countdown-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 24px;
+            padding: 20px 32px;
+            background: linear-gradient(135deg, #007aff, #5856d6);
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 8px 32px rgba(0, 122, 255, 0.3);
+        }
+
+        .countdown-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .countdown-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            text-align: left;
+        }
+
+        /* Members Grid */
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .member-card {
+            border-radius: 24px;
+            padding: 28px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .member-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.08),
+                0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .member-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .avatar.xixian { background: linear-gradient(135deg, #ff6b6b, #ee5a6f); }
+        .avatar.liushen { background: linear-gradient(135deg, #4ecdc4, #44a08d); }
+        .avatar.huangsir { background: linear-gradient(135deg, #667eea, #764ba2); }
+
+        .member-info h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+        }
+
+        .member-info p {
+            color: #86868b;
+            font-size: 0.9rem;
+        }
+
+        /* Stats */
+        .stats-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-pill {
+            flex: 1;
+            text-align: center;
+            padding: 16px 12px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 16px;
+            transition: background 0.2s;
+        }
+
+        .stat-pill:hover {
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        .stat-pill .value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #007aff;
+            line-height: 1;
+        }
+
+        .stat-pill .label {
+            font-size: 0.75rem;
+            color: #86868b;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        /* Check-in Form */
+        .checkin-form {
+            margin-bottom: 24px;
+        }
+
+        .form-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 12px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .form-input {
+            flex: 1;
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            font-size: 1rem;
+            color: #1d1d1f;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: #007aff;
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #a1a1a6;
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #007aff;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #0051d5;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Progress Section */
+        .progress-section {
+            margin-bottom: 24px;
+        }
+
+        .progress-item {
+            margin-bottom: 16px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+        .progress-header .name {
+            color: #1d1d1f;
+            font-weight: 500;
+        }
+
+        .progress-header .percent {
+            color: #007aff;
+            font-weight: 600;
+        }
+
+        .progress-track {
+            height: 8px;
+            background: rgba(0, 0, 0, 0.06);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #007aff, #5856d6);
+            border-radius: 4px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .progress-edit {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .progress-edit input {
+            width: 70px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            text-align: center;
+            color: #1d1d1f;
+            outline: none;
+        }
+
+        .progress-edit input:focus {
+            border-color: #007aff;
+        }
+
+        .btn-small {
+            padding: 10px 16px;
+            background: rgba(0, 0, 0, 0.06);
+            color: #1d1d1f;
+            font-size: 0.85rem;
+        }
+
+        .btn-small:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* History */
+        .history-section {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 14px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid #007aff;
+        }
+
+        .history-date {
+            font-size: 0.75rem;
+            color: #86868b;
+            margin-bottom: 4px;
+        }
+
+        .history-content {
+            font-size: 0.9rem;
+            color: #1d1d1f;
+            line-height: 1.4;
+        }
+
+        .history-hours {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 10px;
+            background: rgba(0, 122, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #007aff;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #86868b;
+            font-size: 0.9rem;
+        }
+
+        /* Shared Section */
+        .shared-section {
+            border-radius: 24px;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .quote-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .quote-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #1d1d1f;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .quote-author {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: #86868b;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            padding: 16px 32px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            color: white;
+            border-radius: 16px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .members-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .countdown-number {
+                font-size: 2.5rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .stats-row {
+                flex-wrap: wrap;
+            }
+
+            .stat-pill {
+                min-width: calc(50% - 6px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header glass">
+            <h1>🎓 三人考研打卡</h1>
+            <p class="subtitle">希贤 × 刘神 × 黄sir | 2026一起上岸</p>
+            <div class="countdown-card">
+                <div class="countdown-number" id="daysLeft">--</div>
+                <div class="countdown-label">距离考研<br>还有天</div>
+            </div>
+        </div>
+
+        <!-- Members -->
+        <div class="members-grid">
+            <!-- 希贤 -->
+            <div class="member-card glass" data-member="xixian">
+                <div class="member-header">
+                    <div class="avatar xixian">希</div>
+                    <div class="member-info">
+                        <h3>希贤</h3>
+                        <p>南京大学软件学院 | 408统考</p>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-pill">
+                        <div class="value" data-stat="days">0</div>
+                        <div class="label">打卡天数</div>
+                    </div>
+                    <div class="stat-pill">
+                        <div class="value" data-stat="hours">0</div>
+                        <div class="label">总时长(h)</div>
+                    </div>
+                    <div class="stat-pill">
+                        <div class="value" data-stat="today">0</div>
+                        <div class="label">今日(h)</div>
+                    </div>
+                </div>
+
+                <div class="checkin-form">
+                    <div class="form-title">📍 今日打卡</div>
+                    <div class="form-row">
+                        <input type="number" class="form-input" data-input="hours" placeholder="时长(小时)" min="0" max="24" step="0.5">
+                        <input type="text" class="form-input" data-input="content" placeholder="今天学了什么？">
+                    </div>
+                    <button class="btn btn-primary" onclick="checkIn('xixian')">确认打卡</button>
+                </div>
+
+                <div class="progress-section">
+                    <div class="form-title">📚 408 进度</div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="name">数据结构</span>
+                            <span class="percent" data-progress-text="p1">0%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" data-progress-bar="p1" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="name">计算机组成原理</span>
+                            <span class="percent" data-progress-text="p2">0%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" data-progress-bar="p2" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="name">操作系统</span>
+                            <span class="percent" data-progress-text="p3">0%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" data-progress-bar="p3" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="name">计算机网络</span>
+                            <span class="percent" data-progress-text="p4">0%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" data-progress-bar="p4" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-edit">
+                        <input type="number" data-progress-input="p1" placeholder="数据结构" min="0" max="100">
+                        <input type="number" data-progress-input="p2" placeholder="计组" min="0" max="100">
+                        <input type="number" data-progress-input="p3" placeholder="OS" min="0" max="100">
+                        <input type="number" data-progress-input="p4" placeholder="网络" min="0" max="100">
+                        <button class="btn btn-small" onclick="updateProgress('xixian')">更新</button>
+                    </div>
+                </div>
+
+                <div class="history-section">
+                    <div class="form-title">📝 最近打卡</div>
+                    <div class="history-list" data-history>
+                        <div class="empty-state">暂无记录</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 刘神 -->
+            <div class="member-card glass" data-member="liushen">
+                <div class="member-header">
+                    <div class="avatar liushen">刘</div>
+                    <div class="member-info">
+                        <h3>刘神</h3>
+                        <p>中国矿业大学 | 安全工程</p>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-pill">
+                        <div class="value" data-stat="days">0</div>
+                        <div class="label">打卡天数</div>
+                    </div>
+                    <div class="stat-pill">
+                        <div class="value" data-stat="hours">0</div>
+                        <div class="label">总时长(h)</div>
+                    </div>
+                    <div class="stat-pill">
+                        <div class="value" data-stat="today">0</div>
+                        <div class="label">今日(h)</div>
+                    </div>
+                </div>
+
+                <div class="checkin-form">
+                    <div class="form-title">📍 今日打卡</div>
+                    <div class="form-row">
+                        <input type="number" class="form-input" data-input="hours" placeholder="时长(小时)" min="0" max="24" step="0.5">
+                        <input type="text" class="form-input" data-input="content" placeholder="今天学了什么？">
+                    </div>
+                    <button class="btn btn-primary" onclick="checkIn('liushen')">确认打卡</button>
+                </div>
+
+                <div class="progress-section">
+                    <div class="form-title">📚 专业课进度</div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="name">安全系统工程</span>
+                            <span class="percent" data-progress-text="p1">0%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" data-progress-bar="p1" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="name">防火防爆</span>
+                            <span class="percent" data-progress-text="p2">0%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" data-progress-bar="p2" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="name">职业卫生</span>
+                            <span class="percent" data-progress-text="p3">0%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" data-progress-bar="p3" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-edit">
+                        <input type="number" data-progress-input="p1" placeholder="安全系统" min="0" max="100">
+                        <input type="number" data-progress-input="p2" placeholder="防火防爆" min="0" max="100">
+                        <input type="number" data-progress-input="p3" placeholder="职业卫生" min="0" max="100">
+                        <button class="btn btn-small" onclick="updateProgress('liushen')">更新</button>
+                    </div>
+                </div>
+
+                <div class="history-section">
+                    <div class="form-title">📝 最近打卡</div>
+                    <div class="history-list" data-history>
+                        <div class="empty-state">暂无记录</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 黄sir -->
+            <div class="member-card glass" data-member="huangsir">
+                <div class="member-header">
+                    <div class="avatar huangsir">黄</div>
+                    <div class="member-info">
+                        <h3>黄sir</h3>
+                        <p>南京大学 | 电气工程</p>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-pill">
+                        <div class="value" data-stat="days">0</div>
+                        <div class="label">打卡天数</div>
+                    </div>
+                    <div class="stat-pill">
+                        <div class="value" data-stat="hours">0</div>
+                        <div class="label">总时长(h)</div>
+                    </div>
+                    <div class="stat-pill">
+                        <div class="value" data-stat="today">0</div>
+                        <div class="label">今日(h)</div>
+                    </div>
+                </div>
+
+                <div class="checkin-form">
+                    <div class="form-title">📍 今日打卡</div>
+                    <div class="form-row">
+                        <input type="number" class="form-input" data-input="hours" placeholder="时长(小时)" min="0" max="24" step="0.5">
+                        <input type="text" class="form-input" data-input="content" placeholder="今天学了什么？">
+                    </div>
+                    <button class="btn btn-primary" onclick="checkIn('huangsir')">确认打卡</button>
+                </div>
+
+                <div class="progress-section">
+                    <div class="form-title">📚 专业课进度</div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="name">电路原理</span>
+                            <span class="percent" data-progress-text="p1">0%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" data-progress-bar="p1" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="name">电机学</span>
+                            <span class="percent" data-progress-text="p2">0%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" data-progress-bar="p2" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="name">电力电子</span>
+                            <span class="percent" data-progress-text="p3">0%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" data-progress-bar="p3" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-edit">
+                        <input type="number" data-progress-input="p1" placeholder="电路" min="0" max="100">
+                        <input type="number" data-progress-input="p2" placeholder="电机" min="0" max="100">
+                        <input type="number" data-progress-input="p3" placeholder="电力电子" min="0" max="100">
+                        <button class="btn btn-small" onclick="updateProgress('huangsir')">更新</button>
+                    </div>
+                </div>
+
+                <div class="history-section">
+                    <div class="form-title">📝 最近打卡</div>
+                    <div class="history-list" data-history>
+                        <div class="empty-state">暂无记录</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quote -->
+        <div class="shared-section glass">
+            <div class="quote-icon">💫</div>
+            <div class="quote-text" id="dailyQuote">星光不问赶路人，时光不负有心人。</div>
+            <div class="quote-author">—— 考研人</div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        const members = ['xixian', 'liushen', 'huangsir'];
+        let membersData = {};
+
+        const quotes = [
+            "星光不问赶路人，时光不负有心人。",
+            "你背不下来的书，总有人能背下来。",
+            "那些看似不起波澜的日复一日，会突然在某一天让人看到坚持的意义。",
+            "愿你以渺小启程，以伟大结束。",
+            "没有醒不来的早晨，没有熬不过的迷茫。",
+            "考研就像在黑屋子里洗衣服，你不知道洗干净没有。",
+            "坚持的意义：以后的日子里，放眼望去，全部都是自己喜欢的人和事。",
+            "种一棵树最好的时间是十年前，其次是现在。"
+        ];
+
+        async function init() {
+            updateCountdown();
+            updateQuote();
+            await loadData();
+            setInterval(updateCountdown, 60000);
+            setInterval(loadData, 30000);
+        }
+
+        function updateCountdown() {
+            const examDate = new Date('2026-12-26');
+            const now = new Date();
+            const days = Math.ceil((examDate - now) / (1000 * 60 * 60 * 24));
+            document.getElementById('daysLeft').textContent = days > 0 ? days : 0;
+        }
+
+        function updateQuote() {
+            const index = new Date().getDate() % quotes.length;
+            document.getElementById('dailyQuote').textContent = quotes[index];
+        }
+
+        async function loadData() {
+            try {
+                const response = await fetch(`${API_BASE}/api/data`);
+                membersData = await response.json();
+                members.forEach(renderMember);
+            } catch (err) {
+                console.error('加载数据失败:', err);
+                showToast('同步数据失败，请刷新重试');
+            }
+        }
+
+        function renderMember(memberId) {
+            const data = membersData[memberId];
+            if (!data) return;
+
+            const card = document.querySelector(`[data-member="${memberId}"]`);
+            
+            // Stats
+            card.querySelector('[data-stat="days"]').textContent = data.totalDays;
+            card.querySelector('[data-stat="hours"]').textContent = data.totalHours.toFixed(1);
+            card.querySelector('[data-stat="today"]').textContent = data.todayHours.toFixed(1);
+
+            // Progress
+            const maxP = memberId === 'xixian' ? 4 : 3;
+            for (let i = 1; i <= maxP; i++) {
+                const p = data.progress?.[`p${i}`] || 0;
+                const textEl = card.querySelector(`[data-progress-text="p${i}"]`);
+                const barEl = card.querySelector(`[data-progress-bar="p${i}"]`);
+                if (textEl) textEl.textContent = p + '%';
+                if (barEl) barEl.style.width = p + '%';
+            }
+
+            // History
+            const historyList = card.querySelector('[data-history]');
+            if (data.history?.length > 0) {
+                historyList.innerHTML = data.history.slice(0, 5).map(h => `
+                    <div class="history-item">
+                        <div class="history-date">${h.date}</div>
+                        <div class="history-content">${escapeHtml(h.content)}</div>
+                        <span class="history-hours">${h.hours}h</span>
+                    </div>
+                `).join('');
+            } else {
+                historyList.innerHTML = '<div class="empty-state">暂无记录</div>';
+            }
+        }
+
+        async function checkIn(memberId) {
+            const card = document.querySelector(`[data-member="${memberId}"]`);
+            const hours = parseFloat(card.querySelector('[data-input="hours"]').value) || 0;
+            const content = card.querySelector('[data-input="content"]').value.trim();
+
+            if (hours <= 0) {
+                showToast('请输入学习时长！');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/checkin/${memberId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ hours, content })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    membersData[memberId] = result.member;
+                    renderMember(memberId);
+                    card.querySelector('[data-input="hours"]').value = '';
+                    card.querySelector('[data-input="content"]').value = '';
+                    showToast('打卡成功！💪');
+                } else {
+                    showToast(result.error || '打卡失败');
+                }
+            } catch (err) {
+                showToast('网络错误，请重试');
+            }
+        }
+
+        async function updateProgress(memberId) {
+            const card = document.querySelector(`[data-member="${memberId}"]`);
+            const maxP = memberId === 'xixian' ? 4 : 3;
+            const progress = {};
+            
+            for (let i = 1; i <= maxP; i++) {
+                progress[`p${i}`] = parseInt(card.querySelector(`[data-progress-input="p${i}"]`).value) || 0;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/progress/${memberId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ progress })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    membersData[memberId] = result.member;
+                    renderMember(memberId);
+                    showToast('进度已更新！');
+                } else {
+                    showToast(result.error || '更新失败');
+                }
+            } catch (err) {
+                showToast('网络错误，请重试');
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        init();
+    </script>
+</body>
+</html>
