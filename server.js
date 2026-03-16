@@ -84,6 +84,15 @@ function checkNewDay(data) {
   return data;
 }
 
+// 健康检查
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // 获取所有数据
 app.get('/api/data', (req, res) => {
   let data = readData();
