@@ -169,6 +169,11 @@ app.post('/api/reset-today', (req, res) => {
   }
 });
 
+// 健康检查
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK' });
+});
+
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 考研打卡服务器运行在端口 ${PORT}`);
   console.log(`📱 监听地址：http://0.0.0.0:${PORT}`);
