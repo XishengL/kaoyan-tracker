@@ -1,17 +1,11 @@
 const express = require('express');
-const fs = require('fs');
 const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-const DATA_FILE = path.join(__dirname, 'data.json');
 
-// 中间件
-app.use(express.json());
-app.use(express.static(__dirname));
-
-// 默认数据
-const defaultData = {
+// 使用内存存储（Railway 的磁盘是临时的）
+let membersData = {
   xixian: {
     name: '希贤',
     school: '南京大学软件学院',
@@ -60,63 +54,9 @@ const defaultData = {
   }
 };
 
-// 初始化数据文件
-function initDataFile() {
-  try {
-    if (!fs.existsSync(DATA_FILE)) {
-      fs.writeFileSync(DATA_FILE, JSON.stringify(defaultData, null, 2));
-      console.log('创建初始数据文件');
-    }
-  } catch (e) {
-    console.error('初始化数据文件失败:', e.message);
-  }
-}
-
-function readData() {
-  try {
-    if (fs.existsSync(DATA_FILE)) {
-      const content = fs.readFileSync(DATA_FILE, 'utf8');
-      const data = content ? JSON.parse(content) : {};
-      // 合并默认数据
-      for (let key in defaultData) {
-        if (!data[key]) {
-          data[key] = JSON.parse(JSON.stringify(defaultData[key]));
-        } else {
-          // 确保 progress 存在且包含所有科目
-          if (!data[key].progress) {
-            data[key].progress = JSON.parse(JSON.stringify(defaultData[key].progress));
-          } else {
-            // 合并缺失的科目
-            for (let subject in defaultData[key].progress) {
-              if (!(subject in data[key].progress)) {
-                data[key].progress[subject] = 0;
-              }
-            }
-          }
-          // 确保其他字段存在
-          data[key].totalDays = data[key].totalDays || 0;
-          data[key].totalHours = data[key].totalHours || 0;
-          data[key].todayHours = data[key].todayHours || 0;
-          data[key].history = data[key].history || [];
-        }
-      }
-      return data;
-    }
-  } catch (e) {
-    console.error('读取数据失败:', e.message);
-  }
-  return JSON.parse(JSON.stringify(defaultData));
-}
-
-function writeData(data) {
-  try {
-    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-    return true;
-  } catch (e) {
-    console.error('保存数据失败:', e.message);
-    return false;
-  }
-}
+// 中间件
+app.use(express.json());
+app.use(express.static(__dirname));
 
 // 路由
 app.get('/', (req, res) => {
@@ -128,19 +68,13 @@ app.get('/health', (req, res) => {
 });
 
 app.get('/api/data', (req, res) => {
-  try {
-    const data = readData();
-    res.json(data);
-  } catch (e) {
-    res.status(500).json({ error: '读取数据失败' });
-  }
+  res.json(membersData);
 });
 
 app.post('/api/checkin/:id', (req, res) => {
   try {
     const { hours, content } = req.body;
-    const data = readData();
-    const member = data[req.params.id];
+    const member = membersData[req.params.id];
     
     if (!member) {
       return res.status(404).json({ error: '成员不存在' });
@@ -182,11 +116,7 @@ app.post('/api/checkin/:id', (req, res) => {
       member.history = member.history.slice(0, 50);
     }
 
-    if (writeData(data)) {
-      res.json({ success: true, member });
-    } else {
-      res.status(500).json({ error: '保存失败' });
-    }
+    res.json({ success: true, member });
   } catch (e) {
     console.error('打卡错误:', e);
     res.status(500).json({ error: '服务器错误' });
@@ -196,14 +126,13 @@ app.post('/api/checkin/:id', (req, res) => {
 app.post('/api/progress/:id', (req, res) => {
   try {
     const { subject, value } = req.body;
-    const data = readData();
-    const member = data[req.params.id];
+    const member = membersData[req.params.id];
     
     if (!member) {
       return res.status(404).json({ error: '成员不存在' });
     }
 
-    if (!member.progress || !member.progress.hasOwnProperty(subject)) {
+    if (!member.progress || !(subject in member.progress)) {
       return res.status(400).json({ error: '科目不存在' });
     }
 
@@ -213,38 +142,29 @@ app.post('/api/progress/:id', (req, res) => {
     }
 
     member.progress[subject] = numValue;
-    
-    if (writeData(data)) {
-      res.json({ success: true, member });
-    } else {
-      res.status(500).json({ error: '保存失败' });
-    }
+    res.json({ success: true, member });
   } catch (e) {
     console.error('更新进度错误:', e);
     res.status(500).json({ error: '服务器错误' });
   }
 });
 
-// 初始化并启动
-initDataFile();
-
+// 启动
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`考研打卡系统运行在端口 ${PORT}`);
 });
 
 // 优雅关闭
 process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully');
+  console.log('SIGTERM received, shutting down');
   server.close(() => {
-    console.log('Server closed');
     process.exit(0);
   });
 });
 
 process.on('SIGINT', () => {
-  console.log('SIGINT received, shutting down gracefully');
+  console.log('SIGINT received, shutting down');
   server.close(() => {
-    console.log('Server closed');
     process.exit(0);
   });
 });

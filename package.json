@@ -1,7 +1,7 @@
 {
   "name": "kaoyan-tracker",
-  "version": "2.0.0",
-  "description": "考研打卡系统 - 三人打卡",
+  "version": "2.1.0",
+  "description": "考研打卡系统 - 内存存储版",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
