@@ -1,0 +1,35 @@
+{
+  "xixian": {
+    "name": "希贤",
+    "school": "南京大学软件学院",
+    "subject": "408 统考",
+    "totalDays": 0,
+    "totalHours": 0,
+    "todayHours": 0,
+    "lastCheckIn": null,
+    "progress": {"p1": 0, "p2": 0, "p3": 0, "p4": 0},
+    "history": []
+  },
+  "liushen": {
+    "name": "刘神",
+    "school": "中国矿业大学",
+    "subject": "安全工程",
+    "totalDays": 0,
+    "totalHours": 0,
+    "todayHours": 0,
+    "lastCheckIn": null,
+    "progress": {"p1": 0, "p2": 0, "p3": 0},
+    "history": []
+  },
+  "huangsir": {
+    "name": "黄 sir",
+    "school": "南京大学",
+    "subject": "电气工程",
+    "totalDays": 0,
+    "totalHours": 0,
+    "todayHours": 0,
+    "lastCheckIn": null,
+    "progress": {"p1": 0, "p2": 0, "p3": 0},
+    "history": []
+  }
+}
