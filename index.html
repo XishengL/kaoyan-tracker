@@ -192,6 +192,13 @@
         const EXAM_DATE = new Date('2025-12-20');
         let membersData = {};
         
+        // 科目名称映射
+        const subjectNames = {
+            xixian: { p1: '计算机网络', p2: '操作系统', p3: '计算机组成原理', p4: '数据结构' },
+            liushen: { p1: '专业课一', p2: '专业课二', p3: '数学' },
+            huangsir: { p1: '专业课一', p2: '专业课二', p3: '数学' }
+        };
+        
         function updateCountdown() {
             const days = Math.ceil((EXAM_DATE - new Date()) / (1000 * 60 * 60 * 24));
             document.getElementById('countdown').textContent = days > 0 ? days : 0;
@@ -250,14 +257,16 @@
             }
         }
         
-        async function updateProgress(id, subject) {
-            const value = document.getElementById(`progress-${id}-${subject}`).value;
+        async function updateProgress(id, key) {
+            const value = document.getElementById(`progress-${id}-${key}`).value;
+            const progress = {};
+            progress[key] = parseInt(value);
             
             try {
                 const res = await fetch(`/api/progress/${id}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ subject, value })
+                    body: JSON.stringify({ progress })
                 });
                 
                 const result = await res.json();
@@ -276,31 +285,28 @@
             
             container.innerHTML = Object.entries(membersData).map(([id, m]) => {
                 const isChecked = m.lastCheckIn === today;
+                const names = subjectNames[id];
                 
-                const progressHtml = Object.entries(m.progress).map(([subject, val]) => `
+                const progressHtml = Object.entries(m.progress).map(([key, val]) => `
                     <div class="progress-item">
                         <div class="progress-header">
-                            <span>${subject}</span>
+                            <span>${names[key] || key}</span>
                             <span>${val}%</span>
                         </div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: ${val}%"></div>
                         </div>
-                        <input type="range" id="progress-${id}-${subject}" value="${val}" min="0" max="100"
-                               onchange="updateProgress('${id}', '${subject}')">
+                        <input type="range" id="progress-${id}-${key}" value="${val}" min="0" max="100"
+                               onchange="updateProgress('${id}', '${key}')">
                     </div>
                 `).join('');
                 
-                const historyHtml = m.history.slice(0, 5).map(h => {
-                    const date = new Date(h.date);
-                    const dateStr = `${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:${String(date.getMinutes()).padStart(2,'0')}`;
-                    return `
-                        <div class="history-item">
-                            <div class="date">${dateStr}</div>
-                            <div><span class="hours">${h.hours}h</span> ${h.content}</div>
-                        </div>
-                    `;
-                }).join('') || '<p style="color:#999;text-align:center;font-size:0.85rem">暂无记录</p>';
+                const historyHtml = m.history.slice(0, 5).map(h => `
+                    <div class="history-item">
+                        <div class="date">${h.date}</div>
+                        <div><span class="hours">${h.hours}h</span> ${h.content}</div>
+                    </div>
+                `).join('') || '<p style="color:#999;text-align:center;font-size:0.85rem">暂无记录</p>';
                 
                 return `
                     <div class="member-card">
@@ -357,7 +363,6 @@
             document.getElementById('members').style.display = 'grid';
         }
         
-        // 初始化
         updateCountdown();
         loadData();
         setInterval(updateCountdown, 60000);
