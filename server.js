@@ -169,6 +169,11 @@ app.post('/api/reset-today', (req, res) => {
   }
 });
 
+// 健康检查端点
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', time: new Date().toISOString() });
+});
+
 // 添加学习感悟
 app.post('/api/thought/:id', (req, res) => {
   const { content } = req.body;
