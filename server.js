@@ -169,6 +169,43 @@ app.post('/api/reset-today', (req, res) => {
   }
 });
 
+// 添加学习感悟
+app.post('/api/thought/:id', (req, res) => {
+  const { content } = req.body;
+  if (!content || content.trim() === '') {
+    return res.status(400).json({ error: '请输入感悟内容' });
+  }
+
+  const data = readData();
+  const member = data[req.params.id];
+  
+  if (!member) {
+    return res.status(404).json({ error: '成员不存在' });
+  }
+
+  // 初始化 thoughts 数组
+  if (!member.thoughts) {
+    member.thoughts = [];
+  }
+
+  const now = new Date();
+  member.thoughts.unshift({
+    date: now.toLocaleString('zh-CN'),
+    content: content.trim()
+  });
+
+  // 只保留最近20条感悟
+  if (member.thoughts.length > 20) {
+    member.thoughts = member.thoughts.slice(0, 20);
+  }
+
+  if (writeData(data)) {
+    res.json({ success: true, member });
+  } else {
+    res.status(500).json({ error: '保存失败' });
+  }
+});
+
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 考研打卡服务器运行在端口 ${PORT}`);
   console.log(`📱 监听地址：http://0.0.0.0:${PORT}`);
