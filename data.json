@@ -8,7 +8,8 @@
     "todayHours": 0,
     "lastCheckIn": null,
     "progress": {"p1": 0, "p2": 0, "p3": 0, "p4": 0},
-    "history": []
+    "history": [],
+    "thoughts": []
   },
   "liushen": {
     "name": "刘神",
@@ -19,7 +20,8 @@
     "todayHours": 0,
     "lastCheckIn": null,
     "progress": {"p1": 0, "p2": 0, "p3": 0},
-    "history": []
+    "history": [],
+    "thoughts": []
   },
   "huangsir": {
     "name": "黄 sir",
@@ -30,6 +32,7 @@
     "todayHours": 0,
     "lastCheckIn": null,
     "progress": {"p1": 0, "p2": 0, "p3": 0},
-    "history": []
+    "history": [],
+    "thoughts": []
   }
 }
